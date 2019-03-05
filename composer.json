@@ -1,0 +1,16 @@
+{
+    "name": "tribeos/http-logger",
+    "description": "A simple HTTP request/response logger for API projects.",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aldin Kovačević",
+            "email": "aldin.kovacevic.97@gmail.com"
+        }
+    ],
+    "require": {}
+}
