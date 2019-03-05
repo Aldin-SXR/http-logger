@@ -1,4 +1,10 @@
 <?php
+/**
+ * HttpLogger: A simple HTTP request/response logger for API projects.
+ * 
+ * @copyright Copyright (c) 2019 Aldin Kovačevič <aldin@tribeos.io>
+ * @license MIT
+ */
 
 namespace HttpLog\HttpModels;
 use HttpLog\Utils\HeaderUtils;
