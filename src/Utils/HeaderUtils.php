@@ -21,8 +21,8 @@ class HeaderUtils {
             function getallheaders() {
                 $headers = []; 
                 foreach ($_SERVER as $name => $value) { 
-                    if (substr($name, 0, 5) == 'HTTP_')  { 
-                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+                    if (substr($name, 0, 5) == "HTTP_")  { 
+                        $headers[str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))))] = $value; 
                     } 
                 } 
                 return $headers; 
@@ -40,7 +40,7 @@ class HeaderUtils {
      */
     public static function get_response_headers($as_json = false) {
         /* Get all response headers */
-        if (!function_exists('apache_response_headers')) {
+        if (!function_exists("apache_response_headers")) {
             function apache_response_headers () {
                 $arh = array();
                 $headers = headers_list();
@@ -52,6 +52,8 @@ class HeaderUtils {
             }
         }
         /* Call the existing or custom-defined function*/
+        ob_flush(); //TODO: Good enough?
+        flush();
         return $as_json ? json_encode(apache_response_headers()) : apache_response_headers();
     }
 }
