@@ -44,14 +44,14 @@ class Request {
             "port" => $this->get_variable("REMOTE_PORT"),
             "scheme" => $this->get_variable("SERVER_PROTOCOL", "HTTP/1.1"),
             "user_agent" => $this->get_variable("HTTP_USER_AGENT"),
-            "ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest",
+            "ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest" ? 1 : 0,
             "type" => $this->get_variable("CONTENT_TYPE"),
             "length" => $this->get_variable("CONTENT_LENGTH", 0),
             "query" => $_GET,
             "data" => $_POST,
             "cookies" => $_COOKIE,
             "files" => $_FILES,
-            "is_https" => $this->get_variable("HTTPS", "off") !== "off",
+            "is_https" => $this->get_variable("HTTPS", "off") === "on" ? 1 : 0,
             "accept" => $this->get_variable("HTTP_ACCEPT"),
             "request_headers" => HeaderUtils::get_request_headers()
         ];
