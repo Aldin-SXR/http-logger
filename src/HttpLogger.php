@@ -24,7 +24,26 @@ class HttpLogger {
     }
 
     public function log() {
-        $log = json_encode(array_merge($this->request->get_properties(), $this->response->get_properties()));
+        $log = array_merge($this->request->get_properties(), $this->response->get_properties());
+        $log = $this->format_output($log);
+        return $log;
+    }
+
+    /**
+     * Format output.
+     * Format the desired log output.
+     * @param array $log Log array.
+     * @return string Formatted log string.
+     */
+    private function format_output($log) {
+        foreach ($log as &$log_item) {
+            /* Format arrays into JSON strings */
+            if (is_array($log_item)) {
+                $log_item = json_encode($log_item);
+            }
+        }
+        /* Implode the array into a tab-separated string */
+        $log = implode("\t", $log);
         return $log;
     }
 }
