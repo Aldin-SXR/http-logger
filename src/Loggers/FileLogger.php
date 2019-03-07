@@ -10,15 +10,17 @@ namespace HttpLog\Loggers;
 use HttpLog\Loggers\BaseLogger;
 
 class FileLogger extends BaseLogger {
-    /** @var string Path to log file. */
+    /** @var string $log_file Path to log file. */
     private $log_file;
 
     /**
      * Construct the file logger.
-     * @param string File log path.
+     * @param string $path File log path.
+     * @param string $filter Applied log filter.
      * @return void
      */
-    public function __construct($path) {
+    public function __construct($path, $filter) {
+        parent::__construct($filter);
         $this->log_file = $path;
     }
 
