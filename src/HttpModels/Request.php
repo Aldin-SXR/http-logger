@@ -10,49 +10,54 @@ namespace HttpLog\HttpModels;
 use HttpLog\Utils\HeaderUtils;
 
 class Request {
-    private $url;
+    /** @var array $filter Array of filtered Request properties. */
+    private $filter;
+    private $date;
     private $base;
-    private $method;
+    private $url;
     private $referrer;
+    private $method;
     private $ip;
     private $port;
-    private $ajax;
     private $scheme;
     private $user_agent;
     private $type;
     private $length;
+    private $accept;
     private $query;
     private $data;
     private $cookies;
     private $files;
     private $is_https;
-    private $accept;
-    private $proxy_ip;
+    private $ajax;
     private $request_headers;
 
     /**
      * Construct the Request object.
+     * @param array $filters Array of filtered Request properties.
      * @return void
     */
-    public function __construct() {
+    public function __construct($filters) {
+        $this->filters = $filters;
         $properties = [
-            "url" => str_replace("@", "%40", $this->get_variable("REQUEST_URI", "/")),
+            "date" => date('Y-m-d H:i:s'),
             "base" => str_replace(array("\\"," "), array("/","%20"), dirname($this->get_variable('SCRIPT_NAME'))),
-            "method" => $this->get_method(),
+            "url" => str_replace("@", "%40", $this->get_variable("REQUEST_URI", "/")),
             "referrer" => $this->get_variable("HTTP_REFERER"),
+            "method" => $this->get_method(),
             "ip" => $this->get_variable("REMOTE_ADDR"),
             "port" => $this->get_variable("REMOTE_PORT"),
             "scheme" => $this->get_variable("SERVER_PROTOCOL", "HTTP/1.1"),
             "user_agent" => $this->get_variable("HTTP_USER_AGENT"),
-            "ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest" ? 1 : 0,
             "type" => $this->get_variable("CONTENT_TYPE"),
             "length" => $this->get_variable("CONTENT_LENGTH", 0),
+            "accept" => $this->get_variable("HTTP_ACCEPT"),
             "query" => $_GET,
             "data" => $_POST,
             "cookies" => $_COOKIE,
             "files" => $_FILES,
             "is_https" => $this->get_variable("HTTPS", "off") === "on" ? 1 : 0,
-            "accept" => $this->get_variable("HTTP_ACCEPT"),
+            "ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest" ? 1 : 0,
             "request_headers" => HeaderUtils::get_request_headers()
         ];
         /* Initialize the Request object */
@@ -163,7 +168,7 @@ class Request {
      */
     public function get_properties() {
         $properties = [ ];
-        foreach (get_class_vars(__CLASS__ ) as $property => $value) {
+        foreach ($this->filters as $property) {
             $properties[$property] = $this->$property;
         }
         /* Return property array */
