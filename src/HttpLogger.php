@@ -7,43 +7,22 @@
  */
 
 namespace HttpLog;
-use HttpLog\HttpModels\Request;
-use HttpLog\HttpModels\Response;
+use HttpLog\Loggers\FileLogger;
 
 class HttpLogger {
-    private $request;
-    private $response;
-
     /**
-     * Construct the logger object.
-     * @return void
+     * Log the incoming request/response.
+     * Choose the log type and additional log paramters.
+     * @param string $type Log type (file, MySQL or MongoDB).
+     * @param string $path Log path.
+     * @return int|boolean Logger response.
      */
-    public function __construct() {
-        $this->request = new Request();
-        $this->response = new Response;
-    }
-
-    public function log() {
-        $log = array_merge($this->request->get_properties(), $this->response->get_properties());
-        $log = $this->format_output($log);
-        return $log;
-    }
-
-    /**
-     * Format output.
-     * Format the desired log output.
-     * @param array $log Log array.
-     * @return string Formatted log string.
-     */
-    private function format_output($log) {
-        foreach ($log as &$log_item) {
-            /* Format arrays into JSON strings */
-            if (is_array($log_item)) {
-                $log_item = json_encode($log_item);
-            }
+    public static function log($type = "file", $path) {
+        switch ($type) {
+            case "file":
+                return (new FileLogger($path))->log();
+            default:
+                throw new \Exception("Unrecognized log type.");
         }
-        /* Implode the array into a tab-separated string */
-        $log = implode("\t", $log);
-        return $log;
     }
 }
