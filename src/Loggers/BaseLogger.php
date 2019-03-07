@@ -15,12 +15,13 @@ abstract class BaseLogger {
     protected $response;
 
     /**
-     * Construct the logger object.
+     * Create log models.
+     * Create Request and Response objects, filled with corresponding data.
      * @return void
      */
-    public function __construct() {
+    protected function create_log_models() {
         $this->request = new Request();
-        $this->response = new Response;
+        $this->response = new Response();
     }
 
     /**
