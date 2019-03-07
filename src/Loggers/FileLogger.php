@@ -19,7 +19,6 @@ class FileLogger extends BaseLogger {
      * @return void
      */
     public function __construct($path) {
-        parent::__construct();
         $this->log_file = $path;
     }
 
@@ -29,6 +28,9 @@ class FileLogger extends BaseLogger {
      * @return void
      */
     public function log() {
+        /* Create Response and Request objects */
+        $this->create_log_models();
+        /* Perform the logging*/
         $log = array_merge($this->request->get_properties(), $this->response->get_properties());
         $log = $this->format_output($log);
         try {
