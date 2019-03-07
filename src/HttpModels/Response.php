@@ -10,15 +10,19 @@ namespace HttpLog\HttpModels;
 use HttpLog\Utils\HeaderUtils;
 
 class Response {
+    /** @var array $filter Array of filtered Request properties. */
+    private $filter;
     private $code;
     private $body;
     private $response_headers;
 
     /**
      * Construct the Response object.
+     * @param array $filters Array of filtered Response properties.
      * @return void
     */
-    public function __construct() {
+    public function __construct($filters) {
+        $this->filters = $filters;
         $properties = [
             "code" => http_response_code(),
             "body" => $this->get_body(),
@@ -62,7 +66,7 @@ class Response {
      */
     public function get_properties() {
         $properties = [ ];
-        foreach (get_class_vars(__CLASS__ ) as $property => $value) {
+        foreach ($this->filters as $property) {
             $properties[$property] = $this->$property;
         }
         /* Return property array */
