@@ -47,8 +47,13 @@ abstract class BaseLogger {
         /* Go through all proposed filters and sort them. */
         $filters = (new ParameterFilter($this->log_filter))->create_filters();
         foreach ($filters as $filter) {
+            /* Check for non-existing filters*/
+            if (!property_exists(Request::class, $filter) && !property_exists(Response::class, $filter)) {
+                throw new \Exception("Invalid filter(s) provided.");
+                die;
+            }
             /** Check for response log filters. */
-            if (in_array($filter, DefaultFilters::RESPONSE_ONLY)) {
+            if (in_array($filter, explode("|", DefaultFilters::RESPONSE_ONLY_H))) {
                 $response_filters[ ] = $filter;
             } else {
                 $request_filters[ ] = $filter;
