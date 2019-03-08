@@ -31,17 +31,38 @@ class ParameterFilter {
      * @return array Array of filter parameters.
      */
     public function create_filters() {
+        // TODO: Create a better switching mechanism (DRY)
         switch ($this->filter) {
             case "standard":
-                return DefaultFilters::STANDARD;
+                return explode("|", DefaultFilters::STANDARD);
             case "full":
-                return DefaultFilters::FULL;
+                return explode("|", DefaultFilters::FULL);
+            case "full+h":
+                return explode("|", DefaultFilters::FULL_H);
             case "request_only":
-                return DefaultFilters::REQUEST_ONLY;
+                return explode("|", DefaultFilters::REQUEST_ONLY);
+            case "request_only+h":
+                return explode("|", DefaultFilters::REQUEST_ONLY_H);
             case "response_only":
-                return DefaultFilters::RESPONSE_ONLY;
+                return explode("|", DefaultFilters::RESPONSE_ONLY);
+            case "response_only+h":
+                return explode("|", DefaultFilters::RESPONSE_ONLY_H);
             default:
+                return $this->parse_custom_filters();
+        }
+    }
 
+    /**
+     * Parse custom filters.
+     * Take a custom user filter and parse its parameters.
+     * @return array Array of filter parameters.
+     */
+    private function parse_custom_filters() {
+        /* Try to split and parse a custom filter */
+        try {
+            return explode("|", $this->filter);
+        } catch (\Throwable $e) {
+            throw new \Exception("Invalid filter provided.");
         }
     }
 }
