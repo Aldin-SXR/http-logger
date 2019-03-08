@@ -29,7 +29,7 @@ class Request {
     private $cookies;
     private $files;
     private $is_https;
-    private $ajax;
+    private $is_ajax;
     private $request_headers;
 
     /**
@@ -57,7 +57,7 @@ class Request {
             "cookies" => $_COOKIE,
             "files" => $_FILES,
             "is_https" => $this->get_variable("HTTPS", "off") === "on" ? 1 : 0,
-            "ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest" ? 1 : 0,
+            "is_ajax" => $this->get_variable("HTTP_X_REQUESTED_WITH") === "XMLHttpRequest" ? 1 : 0,
             "request_headers" => HeaderUtils::get_request_headers()
         ];
         /* Initialize the Request object */
