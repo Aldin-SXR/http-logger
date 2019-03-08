@@ -12,7 +12,9 @@
             "email": "aldin.kovacevic.97@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": "^7.1"
+    },
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
