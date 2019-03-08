@@ -13,23 +13,24 @@ namespace HttpLog\Filters;
  */
 class DefaultFilters {
 
-    /** @var array STANDARD "Standard" (necessary) log array */
-    const STANDARD = [
-        "date", "ip", "method", "url", "query", "data", "code", "body"
-    ];
+    /** @var string STANDARD "Standard" (necessary) log string */
+    const STANDARD = "date|ip|method|url|query|data|code|body";
     
-    /** @var array FULL All log array parameters. */
-    const FULL = [
-        "date", "base", "url", "referrer", "method", "ip", "port", "scheme", "user_agent", "type", "length", "accept", "query", "data", "cookies", "files", "is_https", "ajax", "request_headers", "code", "body", "response_headers"
-    ];
-    
-    /** @var array REQUEST_ONLY All request log parameters. */
-    const REQUEST_ONLY = [
-        "date", "base", "url", "referrer", "method", "ip", "port", "scheme", "user_agent", "type", "length", "accept", "query", "data", "cookies", "files", "is_https", "ajax", "request_headers"
-    ];
+    /** @var string FULL All log string parameters. */
+    const FULL = "date|base|url|referrer|method|ip|port|scheme|user_agent|type|length|accept|query|data|cookies|files|is_https|is_ajax|code|body";
 
-    /** @var array RESPONSE_ONLY All response log parameters. */
-    const RESPONSE_ONLY = [
-        "code", "body", "response_headers"
-    ];
+    /** @var string FULL All log string parameters + headers. */
+    const FULL_H = "date|base|url|referrer|method|ip|port|scheme|user_agent|type|length|accept|query|data|cookies|files|is_https|is_ajax|request_headers|code|body|response_headers";    
+    
+    /** @var string REQUEST_ONLY All request log parameters. */
+    const REQUEST_ONLY = "date|base|url|referrer|method|ip|port|scheme|user_agent|type|length|accept|query|data|cookies|files|is_https|is_ajax";
+
+    /** @var string REQUEST_ONLY All request log parameters + request headers. */
+    const REQUEST_ONLY_H = "date|base|url|referrer|method|ip|port|scheme|user_agent|type|length|accept|query|data|cookies|files|is_https|is_ajax|request_headers";
+
+    /** @var string RESPONSE_ONLY All response log parameters. */
+    const RESPONSE_ONLY = "code|body";
+
+    /** @var string RESPONSE_ONLY All response log parameters + response headers. */
+    const RESPONSE_ONLY_H = "code|body|response_headers";
 }
