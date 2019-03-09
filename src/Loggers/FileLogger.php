@@ -34,6 +34,7 @@ class FileLogger extends BaseLogger {
         $this->create_log_models();
         /* Perform the logging*/
         $log = array_merge($this->request->get_properties(), $this->response->get_properties());
+        $this->error ? $log[ ] = json_encode($this->error) : $log;
         $log = $this->format_output($log);
         try {
             file_put_contents($this->log_file, $log."\n", FILE_APPEND);
