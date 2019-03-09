@@ -22,10 +22,10 @@ require_once "vendor/autoload.php";
 After that, you can use the `HttpLog\*` namespace and functions you need in your project.
 
 In order to start logging HTTP requests and responses, you need to first create an `HttpLogger` object. The object constructor has three parameters:
-1. `type`:  Type of logger (for now, _only_ file logger is supported, SQL and MongoDB loggers will be added at a latter date)
+1. `type`:  Type of logger (for now, _only_ the file logger is supported, SQL and MongoDB loggers will be added at a latter date)
 2. `filter`: Log filter. It show which request/response properties will be logged.
     - features several default filter configurations, as well as the option to define custom filters
-3. `path` Path to the log file.
+3. `path`: Path to the log file.
 
 ## Authors
 - __Aldin Kovačević__, _initial work on the library and documentation_ - [Aldin-SXR](https://github.com/Aldin-SXR)
