@@ -11,19 +11,23 @@ use HttpLog\HttpModels\Request;
 use HttpLog\HttpModels\Response;
 use HttpLog\Filters\ParameterFilter;
 use HttpLog\Filters\DefaultFilters;
+use HttpLog\Errors\ErrorHandler;
 
 abstract class BaseLogger {
     protected $request;
     protected $response;
     protected $log_filter;
+    /** @var array $error Error data log. */
+    protected $error = [ ];
 
     /**
      * Create a base logger object.
      * @param string $filter Applied log filter.
-     * @return void
+     * @return void 
      */
     public function __construct($filter) {
         $this->log_filter = $filter;
+        ErrorHandler::create($this);
     }
     /**
      * Create log models.
@@ -64,6 +68,16 @@ abstract class BaseLogger {
             "request_filters" => $request_filters,
             "response_filters" => $response_filters
         ];
+    }
+
+    /**
+     * Set the error.
+     * Set the error data associated with a faulty request.
+     * @param array $error_data Error data.
+     * @return void
+     */
+    public function set_error($error_data) {
+        $this->error = $error_data;
     }
 
     /**
