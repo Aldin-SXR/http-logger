@@ -71,13 +71,13 @@ abstract class BaseLogger {
     }
 
     /**
-     * Set the error.
-     * Set the error data associated with a faulty request.
+     * Store the error.
+     * Store the error data associated with a faulty request in an error array.
      * @param array $error_data Error data.
      * @return void
      */
-    public function set_error($error_data) {
-        $this->error = $error_data;
+    public function store_error($error_data) {
+        $this->error[ ] = $error_data;
     }
 
     /**
