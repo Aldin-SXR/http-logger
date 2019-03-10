@@ -34,15 +34,15 @@ class ErrorHandler {
     public static function handle_error($code, $description, $file = NULL, $line = NULL) {
         $error = self::map_error($code);
         $error_data = [
-            "log_level" => $error["log_level"],
             "error_type" =>$error["error_type"],
-            "code" => $code,
+            "log_level" => $error["log_level"],
+            "error_code" => $code,
             "description" => $description,
             "file" => $file,
             "line" => $line,
         ];
         /* Log error data */
-        self::$logger->set_error($error_data);
+        self::$logger->store_error($error_data);
         /* End script execution for fatal errors. */
         /* If a notice or warning is encountered, the script execution will continue, and the logger will work as intended.
             If a fatal error is encountered, the script execution will terminate, making it a necessity to call the log() method one more time.
