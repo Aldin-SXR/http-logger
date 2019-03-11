@@ -163,7 +163,6 @@ class Request {
 
     /**
      * Return Request properties.
-     *  @var string $criteria
      * @return array Array of Request properties.
      */
     public function get_properties() {
