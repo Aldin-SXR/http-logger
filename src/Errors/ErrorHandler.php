@@ -25,11 +25,13 @@ class ErrorHandler {
     public static function create($logger) {
         self::$logger = $logger;
         set_error_handler("HttpLog\Errors\ErrorHandler::handle_error");
+        register_shutdown_function("HttpLog\Errors\ErrorHandler::handle_fatal_errors");
     }
 
     /**
      * Error handler.
      * The custom error-handling function.
+     * @return void
      */
     public static function handle_error($code, $description, $file = NULL, $line = NULL) {
         $error = self::map_error($code);
@@ -48,11 +50,29 @@ class ErrorHandler {
             If a fatal error is encountered, the script execution will terminate, making it a necessity to call the log() method one more time.
         */
         if ($error["error_type"] === "FATAL") {
-            http_response_code(500);
-            header("Content-Type: application/json");
-            self::$logger->log();
-            die(json_encode($error_data));
+            $this->output_fatal_error($error);
         }
+    }
+
+    /**
+     * Handle fatal errors.
+     * The code for handling otherwise uncatchable fatal PHP errors.
+     * @return void
+     */
+    public static function handle_fatal_errors() {
+        $error = error_get_last();
+        $error_data = [
+            "error_type" => "FATAL",
+            "log_level" => LOG_ERR,
+            "error_code" => 42,
+            "description" => $error["message"],
+            "file" => $error["file"],
+            "line" => $error["line"]
+        ];
+        self::$logger->store_error($error_data);
+        if (in_array($error["type"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
+            self::output_fatal_error($error_data, false);
+       }
     }
 
     /**
@@ -101,5 +121,24 @@ class ErrorHandler {
             default: 
                 break;
         }
+    }
+
+    /**
+     * Log fatal errors.
+     * Log and output fatal PHP errors.
+     * @param array $error Fatal error data.
+     * @param boolean $echo_as_json Whether to echo the error data as JSON or not.
+     * @static
+     * @return void
+     */
+    public static function output_fatal_error($error, $echo_as_json = true) {
+        http_response_code(500);
+        self::$logger->log();
+        /* Output error data as JSON */
+        if ($echo_as_json) {
+            header("Content-Type: application/json");
+            die(json_encode($error));
+        }
+        die();
     }
 }
