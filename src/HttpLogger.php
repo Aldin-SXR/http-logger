@@ -21,7 +21,7 @@ class HttpLogger {
     public static function create($type = "file", $filter = "standard", $path) {
         switch ($type) {
             case "file":
-                return new FileLogger($path, $filter);
+                return new FileLogger($filter, $path);
             default:
                 throw new \Exception("Unrecognized log type.");
         }
