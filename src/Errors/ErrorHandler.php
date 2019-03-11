@@ -9,6 +9,7 @@
 namespace HttpLog\Errors;
 
 use HttpLog\Loggers\BaseLogger;
+use HttpLog\HttpModels\Error;
 
 
  /**
@@ -35,22 +36,16 @@ class ErrorHandler {
      */
     public static function handle_error($code, $description, $file = NULL, $line = NULL) {
         $error = self::map_error($code);
-        $error_data = [
-            "error_type" =>$error["error_type"],
-            "log_level" => $error["log_level"],
-            "error_code" => $code,
-            "description" => $description,
-            "file" => $file,
-            "line" => $line,
-        ];
+        $error = new Error($error["error_type"], $error["log_level"], $code, $description, $file, $line);
+        $error_data = $error->get_properties();
         /* Log error data */
         self::$logger->store_error($error_data);
         /* End script execution for fatal errors. */
         /* If a notice or warning is encountered, the script execution will continue, and the logger will work as intended.
             If a fatal error is encountered, the script execution will terminate, making it a necessity to call the log() method one more time.
         */
-        if ($error["error_type"] === "FATAL") {
-            $this->output_fatal_error($error);
+        if ($error_data["error_type"] === "FATAL") {
+            self::output_fatal_error($error_data);
         }
     }
 
@@ -61,17 +56,11 @@ class ErrorHandler {
      */
     public static function handle_fatal_errors() {
         $error = error_get_last();
-        $error_data = [
-            "error_type" => "FATAL",
-            "log_level" => LOG_ERR,
-            "error_code" => 42,
-            "description" => $error["message"],
-            "file" => $error["file"],
-            "line" => $error["line"]
-        ];
+        $error = new Error("FATAL", LOG_ERR, $error["type"], $error["message"], $error["file"], $error["line"]);
+        $error_data = $error->get_properties();
         self::$logger->store_error($error_data);
-        if (in_array($error["type"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
-            self::output_fatal_error($error_data, false);
+        if (in_array($error_data["error_code"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
+            self::output_fatal_error($error->get_properties(), false);
        }
     }
 
