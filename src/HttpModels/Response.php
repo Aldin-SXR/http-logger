@@ -56,7 +56,7 @@ class Response {
             return $decoded_response;
         }
         /* Return response body */
-        return $response_contents;
+        return str_replace("\n", " ", $response_contents);
     }
 
     /**
