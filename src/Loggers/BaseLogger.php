@@ -14,11 +14,14 @@ use HttpLog\Filters\DefaultFilters;
 use HttpLog\Errors\ErrorHandler;
 
 abstract class BaseLogger {
+    /** @var Request $request The Request object to be logged. */
     protected $request;
+    /** @var Request $request The Response object to be logged. */
     protected $response;
+    /** @var string $log_filter The type of applied log filter. */
     protected $log_filter;
     /** @var array $error Error data log. */
-    protected $error = [ ];
+    protected $errors = [ ];
 
     /**
      * Create a base logger object.
@@ -36,8 +39,11 @@ abstract class BaseLogger {
      */
     protected function create_log_models() {
         $filters = $this->process_filters();
-        $this->request = new Request($filters["request_filters"]);
-        $this->response = new Response($filters["response_filters"]);
+        /* Check if the "only log errors" filter had been checked. */
+        if ($filters !== "error") {
+            $this->request = new Request($filters["request_filters"]);
+            $this->response = new Response($filters["response_filters"]);
+        }
     }
 
     /**
@@ -48,8 +54,12 @@ abstract class BaseLogger {
     private function process_filters() {
         $request_filters = [ ];
         $response_filters = [ ];
-        /* Go through all proposed filters and sort them. */
         $filters = (new ParameterFilter($this->log_filter))->create_filters();
+        /* Check if the "only log errors" filter had been checked. */
+        if ($filters === "error") {
+            return "error";
+        }
+        /* Go through all proposed filters and sort them. */
         foreach ($filters as $filter) {
             /* Check for non-existing filters*/
             if (!property_exists(Request::class, $filter) && !property_exists(Response::class, $filter)) {
@@ -77,7 +87,7 @@ abstract class BaseLogger {
      * @return void
      */
     public function store_error($error_data) {
-        $this->error[ ] = $error_data;
+        $this->errors[ ] = $error_data;
     }
 
     /**
