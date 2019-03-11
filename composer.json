@@ -3,7 +3,9 @@
     "description": "A simple HTTP request/response logger for API projects.",
     "type": "library",
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+        "jms/serializer": "1.7.*",
+        "phpdocumentor/phpdocumentor": "^2.9"
     },
     "license": "MIT",
     "authors": [
