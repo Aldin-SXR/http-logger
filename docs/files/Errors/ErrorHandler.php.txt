@@ -47,6 +47,7 @@ class ErrorHandler {
         if ($error_data["error_type"] === "FATAL") {
             self::output_fatal_error($error_data);
         }
+        return false;
     }
 
     /**

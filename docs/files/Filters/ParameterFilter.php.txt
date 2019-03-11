@@ -12,17 +12,14 @@ use HttpLog\Filters\DefaultFilters;
 class ParameterFilter {
     /** @var string $filter Log filter definition. */
     private $filter;
-    /** @var boolean $include_headers Whether request and response headers should be included in the log. */
-    private $include_headers;
 
     /**
      * Create a filtering object.
      * @param string $filter Applied log filter.
      * @return void
      */
-    public function __construct($filter = "standard", $include_headers = true) {
+    public function __construct($filter = "standard") {
         $this->filter = $filter;
-        $this->include_headers = $include_headers;
     }
 
     /**

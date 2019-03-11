@@ -12,7 +12,18 @@ use HttpLog\HttpModels\Response;
 use HttpLog\Filters\ParameterFilter;
 use HttpLog\Filters\DefaultFilters;
 use HttpLog\Errors\ErrorHandler;
+use HttpLog\HttpModels\Error;
 
+/**
+ * Base logger class, which serves as the backbone of other loggers.
+ * 
+ * @method void trace(string $message) Log a trace string.
+ * @method void debug(string $message) Log a debug string.
+ * @method void info(string $message) Log a info string.
+ * @method void warning(string $message) Log a warning.
+ * @method void error(string $message) Log an error.
+ * @method void fatal(string $message) Log a fatal error.
+ */
 abstract class BaseLogger {
     /** @var Request $request The Request object to be logged. */
     protected $request;
@@ -88,6 +99,49 @@ abstract class BaseLogger {
      */
     public function store_error($error_data) {
         $this->errors[ ] = $error_data;
+    }
+
+    /**
+     * Dynamically call custom logging.
+     * Based on the method name (level), allow a user to manually log an error.
+     * @param string $name Name of the called method.
+     * @param array $arguments Arguments of the called method.
+     * @return void
+     */
+    public function __call($name, $arguments) {
+        /* Get the current backtrace (in order to extract the file and line number). */
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $caller = array_shift($backtrace);
+        /* Create and add the new error to the error stack */
+        $error_map = $this->map_error($name);
+        $error = new Error(strtoupper($name), $error_map[0], $error_map[1], $arguments[0], $caller["file"], $caller["line"]);
+        $error_data = $error->get_properties();
+        $this->errors[ ] = $error_data;
+    }
+
+    /**
+     * Map errors.
+     * Map user-defined errors to their respective log levels and error codes.
+     * @param string $name Logging level name.
+     * @return array Log level and error code.
+     */
+    private function map_error($name) {
+        switch ($name) {
+            case "trace":
+                return [ LOG_NOTICE, E_USER_NOTICE ];
+            case "debug":
+                return [ LOG_DEBUG, E_USER_NOTICE ];
+            case "info":
+                return [ LOG_INFO, E_USER_NOTICE ];
+            case "warning":
+                return [ LOG_WARNING, E_USER_WARNING ];
+            case "error": 
+                return [ LOG_ERR, E_USER_ERROR ];
+            case "fatal":
+                return [ LOG_ERR, E_USER_ERROR ];
+            default:
+                throw new \Exception("Invalid method called.");
+        }
     }
 
     /**

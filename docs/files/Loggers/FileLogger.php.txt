@@ -15,11 +15,11 @@ class FileLogger extends BaseLogger {
 
     /**
      * Construct the file logger.
-     * @param string $path File log path.
      * @param string $filter Applied log filter.
+     * @param string $path File log path.
      * @return void
      */
-    public function __construct($path, $filter) {
+    public function __construct($filter, $path) {
         parent::__construct($filter);
         /* Relative log path should be used in input. */
         $this->log_file = __DIR__."/../../".$path;
