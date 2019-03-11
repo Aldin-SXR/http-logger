@@ -21,7 +21,8 @@ class FileLogger extends BaseLogger {
      */
     public function __construct($path, $filter) {
         parent::__construct($filter);
-        $this->log_file = $path;
+        /* Relative log path should be used in input. */
+        $this->log_file = __DIR__."/../../".$path;
     }
 
     /**
@@ -30,16 +31,17 @@ class FileLogger extends BaseLogger {
      * @return void
      */
     public function log() {
-        /* Create Response and Request objects */
-        $this->create_log_models();
-        /* Perform the logging*/
-        $log = array_merge($this->request->get_properties(), $this->response->get_properties());
-        $this->error ? $log[ ] = json_encode($this->error) : $log;
-        $log = $this->format_output($log);
-        try {
-            file_put_contents($this->log_file, $log."\n", FILE_APPEND);
-        } catch (\Throwable $e) {
-            $e->getTraceAsString();
+        if ($this->log_filter === "error") {
+            /* Error-only logging */
+            $this->log_errors();
+        } else {
+            /* Create Response and Request objects */
+            $this->create_log_models();
+            /* Perform the logging*/
+            $log = array_merge($this->request->get_properties(), $this->response->get_properties());
+            $this->errors ? $log[ ] = json_encode($this->errors) : $log;
+            $log = $this->format_output($log);
+            $this->write_to_file($log);
         }
     }
 
@@ -59,5 +61,35 @@ class FileLogger extends BaseLogger {
         /* Implode the array into a tab-separated string */
         $log = implode("\t", $log);
         return $log;
+    }
+
+    /**
+     * Write to file.
+     * Write the contents of a variable to the file specified by a path.
+     * @param string $content Content to be written to the file.
+     * @return void
+     */
+    private function write_to_file($content) {
+        try {
+            file_put_contents($this->log_file, $content."\n", FILE_APPEND);
+        } catch (\Throwable $e) {
+            $e->getTraceAsString();
+        }
+    }
+
+    /**
+     * Error-only logging.
+     * Called when the filter parameter is set to "error"; it only logs errors, without the request and response.
+     * @return void
+     */
+    private function log_errors() {
+        foreach ($this->errors as &$error) {
+            $error = array_merge([ "date" => date('Y-m-d H:i:s') ], $error); 
+            $error = implode("\t", $error);
+            // TODO: Figure out if there is a better way of dealing with error messages.
+            //  $error["description"] = explode("\n", $error["description"])[0];
+            $error = str_replace("\n", " ", $error);
+            $this->write_to_file($error);
+        }
     }
 }
