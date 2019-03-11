@@ -27,6 +27,10 @@ In order to start logging HTTP requests and responses, you need to first create 
     - features several default filter configurations, as well as the option to define custom filters
 3. `path`: Path to the log file.
 
+## Library documentation
+
+Extensive documentation can be found at: [https://aldin-sxr.github.io/http-logger/](https://aldin-sxr.github.io/http-logger/)
+
 ## Authors
 - __Aldin Kovačević__, _initial work on the library and documentation_ - [Aldin-SXR](https://github.com/Aldin-SXR)
 
