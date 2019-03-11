@@ -48,7 +48,7 @@ class ParameterFilter {
             case "response_only+h":
                 return explode("|", DefaultFilters::RESPONSE_ONLY_H);
             case "error":
-                return "error";
+                return DefaultFilters::ERROR_ONLY;
             default:
                 return $this->parse_custom_filters();
         }

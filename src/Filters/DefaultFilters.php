@@ -33,4 +33,7 @@ class DefaultFilters {
 
     /** @var string RESPONSE_ONLY All response log parameters + response headers. */
     const RESPONSE_ONLY_H = "code|body|response_headers";
+
+    /** @var string ERROR_ONLY Only log errors.  */
+    const ERROR_ONLY = "error";
 }
