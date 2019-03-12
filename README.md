@@ -27,7 +27,7 @@ In order to start logging HTTP requests and responses, you need to first create 
     - features several default filter configurations, as well as the option to define custom filters
 3. `path`: Path to the log file (_default_: `logs/debug.log`)
     - Make sure that your target folder _exists_ and that you have the correct _write permissions_.
-    - __Note__: Any custom path can be specifed, but it __has to__ be specified _relative_ to the project root. The reason for this is that an absolute log file path is used within the library, due to certain function requirements.
+    - __Note__: Any custom path can be specifed, but it __has to__ be specified as an _absolute path_ (e.g. by using `__DIR__`) to the project root. The reason for this is that certain PHP functions which can be triggered by the library change the execution path, so we must rely on absolute paths.
 4. `default_log` (_optional_): Controls whether the errors will __also__ be logged to the default Apache/PHP log file (_default_: `true`)
     - The library logs all errors to its specified `path` file by design. With the `default_log` parameter, you can also let all errors be logged to the default error log file, _in addition to_ the library's log file.
     -  __Note__: Fatal PHP errors (which are irrecoverable) are always logged to the default error log file, regardless of this parameter.
