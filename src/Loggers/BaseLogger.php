@@ -17,7 +17,6 @@ use HttpLog\HttpModels\Error;
 /**
  * Base logger class, which serves as the backbone of other loggers.
  * 
- * @method void trace(string $message) Log a trace string.
  * @method void debug(string $message) Log a debug string.
  * @method void info(string $message) Log a info string.
  * @method void warning(string $message) Log a warning.
@@ -52,8 +51,16 @@ abstract class BaseLogger {
         $filters = $this->process_filters();
         /* Check if the "only log errors" filter had been checked. */
         if ($filters !== "error") {
+            /* Check for fatal errors: if an error is fatal, it should be outputted as JSON later, so the headers should not be flushed */
+            $flush_headers = true;
+            foreach ($this->errors as $error) {
+                if ($error["error_type"] === "FATAL") {
+                    $flush_headers = false;
+                    break;
+                }
+            }
             $this->request = new Request($filters["request_filters"]);
-            $this->response = new Response($filters["response_filters"]);
+            $this->response = new Response($filters["response_filters"], $flush_headers);
         }
     }
 
@@ -117,6 +124,11 @@ abstract class BaseLogger {
         $error = new Error(strtoupper($name), $error_map[0], $error_map[1], $arguments[0], $caller["file"], $caller["line"]);
         $error_data = $error->get_properties();
         $this->errors[ ] = $error_data;
+        /* End script execution on fatal error */
+        if ($error_data["error_type"] === "FATAL") {
+            ErrorHandler::output_fatal_error($error_data, true);
+            die();
+        }
     }
 
     /**
@@ -127,8 +139,6 @@ abstract class BaseLogger {
      */
     private function map_error($name) {
         switch ($name) {
-            case "trace":
-                return [ LOG_NOTICE, E_USER_NOTICE ];
             case "debug":
                 return [ LOG_DEBUG, E_USER_NOTICE ];
             case "info":
