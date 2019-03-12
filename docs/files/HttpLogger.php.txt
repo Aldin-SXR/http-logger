@@ -23,7 +23,7 @@ class HttpLogger {
      * @param boolean $default_log Whether to also log all errors to PHP's default error log file.
      * @return HttpLogger A subtype of a logger.
      */
-    public static function create($type = "file", $filter = "standard", $path, $default_log = true) {
+    public static function create($type = "file", $filter = "full+h", $path = "logs/debug.log", $default_log = true) {
         /* Register the error handler. */
         ErrorHandler::create();
         switch ($type) {

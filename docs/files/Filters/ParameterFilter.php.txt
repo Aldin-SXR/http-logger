@@ -32,6 +32,8 @@ class ParameterFilter {
         switch ($this->filter) {
             case "standard":
                 return explode("|", DefaultFilters::STANDARD);
+            case "standard+h":
+                return explode("|", DefaultFilters::STANDARD_H);
             case "full":
                 return explode("|", DefaultFilters::FULL);
             case "full+h":
