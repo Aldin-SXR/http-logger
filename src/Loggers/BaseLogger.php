@@ -40,7 +40,6 @@ abstract class BaseLogger {
      */
     public function __construct($filter) {
         $this->log_filter = $filter;
-        ErrorHandler::create($this);
     }
     /**
      * Create log models.
