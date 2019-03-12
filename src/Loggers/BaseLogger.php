@@ -116,6 +116,8 @@ abstract class BaseLogger {
         $error_map = $this->map_error($name);
         $error = new Error(strtoupper($name), $error_map[0], $error_map[1], $arguments[0], $caller["file"], $caller["line"]);
         $error_data = $error->get_properties();
+        /* Save the error in PHP error log */
+        error_log(strtoupper($name)." (". $error_map[1]."): ".$arguments[0] ." in ".$caller["file"]. ", line ".$caller["line"] );
         $this->errors[ ] = $error_data;
         /* End script execution on fatal error */
         if ($error_data["error_type"] === "FATAL") {
