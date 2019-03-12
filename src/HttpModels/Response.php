@@ -19,15 +19,14 @@ class Response {
     /**
      * Construct the Response object.
      * @param array $filters Array of filtered Response properties.
-     * @param boolean $flush_headers Whether to flush response headers or not.
      * @return void
     */
-    public function __construct($filters, $flush_headers) {
+    public function __construct($filters) {
         $this->filters = $filters;
         $properties = [
             "code" => http_response_code(),
             "body" => $this->get_body(),
-            "response_headers" => HeaderUtils::get_response_headers(false, $flush_headers)
+            "response_headers" => HeaderUtils::get_response_headers()
         ];
         /* Initialize the Request object */
         $this->initialize($properties);

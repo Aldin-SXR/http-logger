@@ -52,15 +52,10 @@ abstract class BaseLogger {
         /* Check if the "only log errors" filter had been checked. */
         if ($filters !== "error") {
             /* Check for fatal errors: if an error is fatal, it should be outputted as JSON later, so the headers should not be flushed */
-            $flush_headers = true;
-            foreach ($this->errors as $error) {
-                if ($error["error_type"] === "FATAL") {
-                    $flush_headers = false;
-                    break;
-                }
-            }
+            ob_flush();
+            flush();
             $this->request = new Request($filters["request_filters"]);
-            $this->response = new Response($filters["response_filters"], $flush_headers);
+            $this->response = new Response($filters["response_filters"]);
         }
     }
 

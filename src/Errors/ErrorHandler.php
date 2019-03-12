@@ -127,9 +127,6 @@ class ErrorHandler {
         if ($echo_as_json) {
             header("Content-Type: application/json");
         }
-        /* Flush any remaining headers. */
-        ob_flush();
-        flush();
         /* Log and output the error */
         self::$logger->log();
         echo json_encode($error);
