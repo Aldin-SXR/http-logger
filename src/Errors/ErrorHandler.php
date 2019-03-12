@@ -57,11 +57,11 @@ class ErrorHandler {
      */
     public static function handle_fatal_errors() {
         $error = error_get_last();
-        $error = new Error("FATAL", LOG_ERR, $error["type"], $error["message"], $error["file"], $error["line"]);
-        $error_data = $error->get_properties();
-        self::$logger->store_error($error_data);
-        if (in_array($error_data["error_code"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
-            self::output_fatal_error($error->get_properties(), false);
+        if (in_array($error["type"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
+            $error = new Error("FATAL", LOG_ERR, $error["type"], $error["message"], $error["file"], $error["line"]);
+            $error_data = $error->get_properties();
+            self::$logger->store_error($error_data);
+            self::output_fatal_error($error->get_properties());
        }
     }
 
@@ -123,12 +123,15 @@ class ErrorHandler {
      */
     public static function output_fatal_error($error, $echo_as_json = true) {
         http_response_code(500);
-        self::$logger->log();
         /* Output error data as JSON */
         if ($echo_as_json) {
             header("Content-Type: application/json");
-            die(json_encode($error));
         }
-        die();
+        /* Flush any remaining headers. */
+        ob_flush();
+        flush();
+        /* Log and output the error */
+        self::$logger->log();
+        echo json_encode($error);
     }
 }
