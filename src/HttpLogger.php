@@ -20,14 +20,15 @@ class HttpLogger {
      * @param string $type Log type (file, MySQL or MongoDB).
      * @param string $filter Filter defintion (which properties will be logged).
      * @param string $path Log path.
+     * @param boolean $default_log Whether to also log all errors to PHP's default error log file.
      * @return HttpLogger A subtype of a logger.
      */
-    public static function create($type = "file", $filter = "standard", $path) {
+    public static function create($type = "file", $filter = "standard", $path, $default_log = true) {
         /* Register the error handler. */
         ErrorHandler::create();
         switch ($type) {
             case "file":
-                self::$logger = new FileLogger($filter, $path);
+                self::$logger = new FileLogger($filter, $path, $default_log);
                 break;
             default:
                 throw new \Exception("Unrecognized log type.");

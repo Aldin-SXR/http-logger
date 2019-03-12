@@ -32,14 +32,18 @@ abstract class BaseLogger {
     protected $log_filter;
     /** @var array $error Error data log. */
     protected $errors = [ ];
+    /** @var boolean $default_log Whether to also log all errors to PHP's default error log file. */
+    protected $default_log;
 
     /**
      * Create a base logger object.
      * @param string $filter Applied log filter.
+     * @param boolean $default_log Whether to also log all errors to PHP's default error log file.
      * @return void 
      */
-    public function __construct($filter) {
+    public function __construct($filter, $default_log) {
         $this->log_filter = $filter;
+        $this->default_log = $default_log;
     }
     /**
      * Create log models.
@@ -116,9 +120,11 @@ abstract class BaseLogger {
         $error_map = $this->map_error($name);
         $error = new Error(strtoupper($name), $error_map[0], $error_map[1], $arguments[0], $caller["file"], $caller["line"]);
         $error_data = $error->get_properties();
-        /* Save the error in PHP error log */
-        error_log(strtoupper($name)." (". $error_map[1]."): ".$arguments[0] ." in ".$caller["file"]. ", line ".$caller["line"] );
         $this->errors[ ] = $error_data;
+        /* Save the error to PHP's default error log (if enabled) */
+        if ($this->is_using_default_log()) {
+            error_log(strtoupper($name)." (". $error_map[1]."): ".$arguments[0] ." in ".$caller["file"]. ", line ".$caller["line"]);
+        }
         /* End script execution on fatal error */
         if ($error_data["error_type"] === "FATAL") {
             ErrorHandler::output_fatal_error($error_data, true);
@@ -147,6 +153,15 @@ abstract class BaseLogger {
             default:
                 throw new \Exception("Invalid method called.");
         }
+    }
+
+    /**
+     * Get "default log" setting.
+     * Get whether to also log all errors to PHP's default error log file, in addition to the logger's custom file.
+     * @return boolean Is default logger being used or not.
+     */
+    public function is_using_default_log() {
+        return $this->default_log;
     }
 
     /**
