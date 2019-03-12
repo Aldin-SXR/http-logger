@@ -36,9 +36,10 @@ class HeaderUtils {
      * Get response headers.
      * Get all request headers using the predefined method, or a custom method, if it doesn't exist.
      * @param boolean $as_json Whether to return the response headers as formatted JSON string or an array.
+     * @param boolean $flush_headers Whether to flush response headers or not.
      * @return array|string Response headers.
      */
-    public static function get_response_headers($as_json = false) {
+    public static function get_response_headers($as_json = false, $flush_headers = true) {
         /* Get all response headers */
         if (!function_exists("apache_response_headers")) {
             function apache_response_headers () {
@@ -52,8 +53,10 @@ class HeaderUtils {
             }
         }
         /* Call the existing or custom-defined function*/
-        ob_flush(); //TODO: Good enough?
-        flush();
+        if ($flush_headers) {
+            ob_flush(); //TODO: Good enough?
+            flush();
+        }
         return $as_json ? json_encode(apache_response_headers()) : apache_response_headers();
     }
 }
