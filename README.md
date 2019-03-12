@@ -142,7 +142,7 @@ The logger in this example will _only_ log the request date, requested URL, requ
 ### Error logging
 
 In addition to request and response logging, the library also features _error intercepting_ and _handling_. The libary is able to log and gracefully handle PHP _notices_, _warnings_, _errors_ and _fatal errors_. The errors will be logged on the same line _after_ request and response data, as _encoded JSON strings_.
-- __Notice__: for the sake of simplicity, in the remainder of this document we will use the term "error" to refer to all notices, warnings and errors, if not explicitly stated otherwise.
+- __Note__: for the sake of simplicity, in the remainder of this document we will use the term "error" to refer to all notices, warnings and errors, if not explicitly stated otherwise.
 
 Example:
 ```
