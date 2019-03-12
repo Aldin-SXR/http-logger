@@ -23,8 +23,8 @@ class FileLogger extends BaseLogger {
      */
     public function __construct($filter, $path, $default_log) {
         parent::__construct($filter, $default_log);
-        /* Relative log path should be used in input. */
-        $this->log_file = __DIR__."/../../".$path;
+        /* Absolute log path should be used in input. */
+        $this->log_file = $path;
     }
 
     /**
