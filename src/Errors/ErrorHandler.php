@@ -8,23 +8,19 @@
 
 namespace HttpLog\Errors;
 
-use HttpLog\Loggers\BaseLogger;
 use HttpLog\HttpModels\Error;
+use HttpLog\HttpLogger;
 
 
  /**
   * Code insipration and logic taken from: http://php.net/manual/en/function.set-error-handler.php 
   */
 class ErrorHandler {
-    /** @var BaseLogger $logger Logger type. */
-    private static $logger;
-
     /**
-     * Create the error handler object.
+     * Set the error handler methods.
      * @return void 
      */
-    public static function create($logger) {
-        self::$logger = $logger;
+    public static function create() {
         set_error_handler("HttpLog\Errors\ErrorHandler::handle_error");
         register_shutdown_function("HttpLog\Errors\ErrorHandler::handle_fatal_errors");
     }
@@ -39,7 +35,7 @@ class ErrorHandler {
         $error = new Error($error["error_type"], $error["log_level"], $code, $description, $file, $line);
         $error_data = $error->get_properties();
         /* Log error data */
-        self::$logger->store_error($error_data);
+        HttpLogger::get()->store_error($error_data);
         /* End script execution for fatal errors. */
         /* If a notice or warning is encountered, the script execution will continue, and the logger will work as intended.
             If a fatal error is encountered, the script execution will terminate, making it a necessity to call the log() method one more time.
@@ -60,7 +56,7 @@ class ErrorHandler {
         if (in_array($error["type"], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ])) {
             $error = new Error("FATAL", LOG_ERR, $error["type"], $error["message"], $error["file"], $error["line"]);
             $error_data = $error->get_properties();
-            self::$logger->store_error($error_data);
+            HttpLogger::get()->store_error($error_data);
             self::output_fatal_error($error->get_properties());
        }
     }
@@ -128,7 +124,7 @@ class ErrorHandler {
             header("Content-Type: application/json");
         }
         /* Log and output the error */
-        self::$logger->log();
+        HttpLogger::get()->log();
         echo json_encode($error);
     }
 }
