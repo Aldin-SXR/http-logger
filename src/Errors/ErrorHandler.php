@@ -43,7 +43,7 @@ class ErrorHandler {
         if ($error_data["error_type"] === "FATAL") {
             self::output_fatal_error($error_data);
         }
-        return false;
+        return HttpLogger::get()->is_using_default_log() ? false : true;
     }
 
     /**
@@ -125,6 +125,11 @@ class ErrorHandler {
         }
         /* Log and output the error */
         HttpLogger::get()->log();
-        echo json_encode($error);
+        /* Save the error to PHP's default error log (if enabled) */
+        if (HttpLogger::get()->is_using_default_log()) {
+            echo json_encode($error);
+        } else {
+            die(json_encode($error));
+        }
     }
 }
