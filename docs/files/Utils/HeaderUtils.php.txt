@@ -52,8 +52,6 @@ class HeaderUtils {
             }
         }
         /* Call the existing or custom-defined function*/
-        ob_flush(); //TODO: Good enough?
-        flush();
         return $as_json ? json_encode(apache_response_headers()) : apache_response_headers();
     }
 }

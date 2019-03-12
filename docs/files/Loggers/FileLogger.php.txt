@@ -15,12 +15,14 @@ class FileLogger extends BaseLogger {
 
     /**
      * Construct the file logger.
+     * 
      * @param string $filter Applied log filter.
      * @param string $path File log path.
+     * @param boolean $default_log Whether to also log all errors to PHP's default error log file.
      * @return void
      */
-    public function __construct($filter, $path) {
-        parent::__construct($filter);
+    public function __construct($filter, $path, $default_log) {
+        parent::__construct($filter, $default_log);
         /* Relative log path should be used in input. */
         $this->log_file = __DIR__."/../../".$path;
     }

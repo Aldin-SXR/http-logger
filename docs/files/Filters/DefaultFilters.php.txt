@@ -14,7 +14,7 @@ namespace HttpLog\Filters;
 class DefaultFilters {
 
     /** @var string STANDARD "Standard" (necessary) log string */
-    const STANDARD = "date|ip|method|url|query|data|code|body";
+    const STANDARD = "date|url|method|ip|url|query|data|code|body";
     
     /** @var string FULL All log string parameters. */
     const FULL = "date|base|url|referrer|method|ip|port|scheme|user_agent|type|length|accept|query|data|cookies|files|is_https|is_ajax|code|body";
