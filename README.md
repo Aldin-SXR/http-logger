@@ -210,6 +210,7 @@ $logger->fatal("This fatal error will stop program execution.");
 ```
 
 These user-defined errors "behave" in the same way as regular errors: debug messages, warnings and info messages are simply logged, whereas errors and fatal errors also stop program execution. Moreover, the logger will have no difficulties logging both the regular errors and the user-defined errors in a single session.
+- __Note__: Since the primary purpose of the logger library is request/response logging, the user __still__ needs to call `$logger->log()` or `HttpLogger::get()->log()` somewhere in the code. The user-defined functions will _only_ store the logs within the logger object. The `log()` method is the one that actually commits the logs to a file.
 
 If the `default_log` parameter in the logger initialization is set to `true`, user-defined errors will also be logged in the default Apache/PHP log file.
 
