@@ -251,6 +251,6 @@ The documentation was generated with [PHPDocumentor](https://www.phpdoc.org/).
 
 ## License
 The skeleton is licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) license. See the [LICENSE](https://github.com/Aldin-SXR/http-logger/blob/master/LICENSE) file for details.
-
+  
 ---
 _Work in progress_ by [_tribeOS - The Fairest, Most Profitable Advertising Marketplace Ever._](http://tribeos.io)
